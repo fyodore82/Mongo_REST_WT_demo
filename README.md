@@ -8,3 +8,8 @@ This project in not actively maintained.
 ## Getting started
 
 There is GetDependenciesReady.txt file in current directory with detailed description on how to install all required prerequisites for this project. There you may find my experience on getting all technologies mentioned above to work.
+
+## Project Structure
+
+VehicleServer - is a RESTful web service, which accpets POST requests and queries cloud MongoDB using Cxx driver.  
+VehicleClient - is Wt app which shows simple web interface. On user actions it sends POST requests to web service and renders responses.
