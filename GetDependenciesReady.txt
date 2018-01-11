@@ -1,0 +1,125 @@
+	Readme document
+	
+	I used Visual Studio 2017 Community to develop and build this project on
+	Windows 8.1 x64.
+	All projects built under Win32 Debug/Release.
+	
+	=========================
+	1. Instructions to config prereq.
+	=========================
+	
+	It may be necessary to delete/disable antivirus.
+	
+	----------------------------------------------
+	Install C++ REST API
+	----------------------------------------------
+	
+	Run cmd as Administrator
+	
+	Mkdir vcpkg
+	Cd vcpkg
+	git clone "https://github.com/Microsoft/vcpkg"
+	Cd vcpkg
+	.\bootstrap-vcpkg.bat
+	.\vcpkg integrate install
+	
+	vcpkg install cpprestsdk 
+	
+	Cpprest (32 bit) should be in C:\vcpkg\vcpkg\installed\x86-windows
+	
+	--------------------------------------------------------
+	Install and build MongoDB driver
+	--------------------------------------------------------
+	
+	a. Build mongo c driver.
+	
+	Download tar from https://github.com/mongodb/mongo-c-driver/releases/download/1.8.2/mongo-c-driver-1.8.2.tar.gz 
+	Unzip to C:\vcpkg\mongo-c-driver-1.8.2
+	
+	Cd C:\vcpkg\mongo-c-driver-1.8.2\src\libbson
+	
+	"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake" -G "Visual Studio 14 2015" "-DCMAKE_INSTALL_PREFIX=C:\mongo-c-driver" "-DCMAKE_BUILD_TYPE=Release"
+	msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj
+	msbuild.exe /p:Configuration=Release INSTALL.vcxproj
+	
+	Cd C:\vcpkg\mongo-c-driver-1.8.2
+	
+	"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake" -G "Visual Studio 14 2015" "-DENABLE_SSL=WINDOWS" "-DENABLE_SASL=SSPI" "-DCMAKE_INSTALL_PREFIX=C:\mongo-c-driver"  "-DCMAKE_PREFIX_PATH=C:\mongo-c-driver" "-DCMAKE_BUILD_TYPE=Release"
+	msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj
+	msbuild.exe /p:Configuration=Release INSTALL.vcxproj
+	
+	b. Build MongoDB C++ driver
+	
+	Download boost from https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.zip 
+	Unzip to C:\vcpkg\boost_1_65_1
+	
+	Download driver from https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.3.zip
+	Unzip to C:\vcpkg\mongo-cxx-driver-r3.1.3
+	
+	cd C:\vcpkg\mongo-cxx-driver-r3.1.3\build
+	"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake" -G "Visual Studio 14" -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver -DLIBMONGOC_DIR=c:\mongo-c-driver -DLIBBSON_DIR=c:\mongo-c-driver -DBOOST_ROOT=C:\vcpkg\boost_1_65_1 ..
+	
+	msbuild.exe ALL_BUILD.vcxproj
+	msbuild.exe INSTALL.vcxproj
+	
+	------------------------------------
+	Install WT
+	------------------------------------------------------------------------
+	Download WT from https://github.com/emweb/wt/releases/download/4.0.2/Wt-4.0.2-msvs2017-Windows-x86-SDK.exe and install to default path (C:\Program Files (x86)\Wt 4.0.2 msvs2017 x86)
+	
+	===================================
+	2. Databases
+	===================================
+	DB already created in cloud (https://cloud.mongodb.com). Below instructions are for reference only (not needed to be executed again)
+	
+	For Admin access to web-consile
+	User: dennis-58@outlook.com
+	Pwd: Jjjj7080-
+	
+	MongoDB user (for access from program)
+	User: CrsConn@admin 
+	Pwd: Jjjj7080
+		
+	To connect (using shell)
+	Cd C:\Program Files\MongoDB\Server\3.4\bin
+	mongo "mongodb://cluster0-shard-00-00-dmaqe.mongodb.net:27017,cluster0-shard-00-01-dmaqe.mongodb.net:27017,cluster0-shard-00-02-dmaqe.mongodb.net:27017/test?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl --username CrsConn --password Jjjj7080
+	
+	-------------------------------------------
+	Create DB using shell
+	-------------------------------------------
+	
+	use StolenVehDB
+	db.createCollection( "Vehicle",
+	   {
+	      validator: { $or: [
+	            { Vehicle_Registration: { $type: "string" } },
+	            { Vehicle_Make: { $type: "string"  } },
+	            { Vehicle_Model: { $type: "string" } },
+		{ Vehicle_Owner: { $type: "string" } }
+	         ]
+	      }
+	   }
+	)
+	use StolenVehDB
+	db.createCollection( "Log",
+	   {
+	      validator: { $or:
+	         [
+	            { ReqDateTime: { $type: "date" } },
+	            { Query: { $type: "string"  } },
+	         ]
+	      }
+	   }
+	)
+	-----------------------------------
+	Pre-populate database
+	-----------------------------------
+	db.Vehicle.insertMany([
+	   { Vehicle_Registration: "B140", Vehicle_Make: "toyota", Vehicle_Model: "corolla", Vehicle_Owner: "John" },
+	   { Vehicle_Registration: "M10", Vehicle_Make: "toyota", Vehicle_Model: "rav4", Vehicle_Owner: "Smith" },
+	   { Vehicle_Registration: "C140", Vehicle_Make: "nissan", Vehicle_Model: "teana", Vehicle_Owner: "Joe" },
+	{Vehicle_Registration: "D230", Vehicle_Make: "ford", Vehicle_Model: "focus", Vehicle_Owner: "Mike"},
+	{Vehicle_Registration: "S134", Vehicle_Make: "ford", Vehicle_Model: "escalade", Vehicle_Owner: "Alice"},
+	{Vehicle_Registration: "F10", Vehicle_Make: "nissan", Vehicle_Model: "skyline", Vehicle_Owner: "Mary"},
+	{Vehicle_Registration: "E110", Vehicle_Make: "toyota", Vehicle_Model: "camry", Vehicle_Owner: "Garry"}
+	])
