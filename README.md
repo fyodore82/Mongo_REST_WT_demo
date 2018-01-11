@@ -1,9 +1,9 @@
 # Usage demo of Wt (webtoolkit) Microsoft REST API (Casablanca) and MongoDB C++ driver
 
-This is demo project which is using Wt ([webtoolkit](https://www.webtoolkit.eu/wt)), [Microsoft C++ REST SDK](https://github.com/Microsoft/cpprestsdk)(Casablanca) and [MongoDB C++ driver](https://github.com/mongodb/mongo-cxx-driver).
-It was written as test project for one company.
-You are free to use any code part of this project.
-This project in not actively maintained.
+This is demo project which is using Wt ([webtoolkit](https://www.webtoolkit.eu/wt)), [Microsoft C++ REST SDK](https://github.com/Microsoft/cpprestsdk)(Casablanca) and [MongoDB C++ driver](https://github.com/mongodb/mongo-cxx-driver).  
+It was written as trial project for one company.  
+You are free to use any code part of this project.  
+This project in not actively maintained.  
 
 ## Getting started
 
